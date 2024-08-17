@@ -1,7 +1,6 @@
 package fdbtest_test
 
 import (
-	"os"
 	"testing"
 
 	"github.com/apple/foundationdb/bindings/go/src/fdb"
@@ -15,20 +14,15 @@ func init() {
 
 func BenchmarkRoundtrip(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		node := fdbtest.MustStart()
-		node.Destroy()
+		node := fdbtest.MustStart(b)
+		node.Destroy(b)
 	}
 }
 
 func TestRoundtrip(t *testing.T) {
-	context := fdbtest.Context{
-		Logger:  fdbtest.WriterLogger{os.Stderr},
-		Verbose: true,
-	}
-
 	// start foundationdb node
-	node := context.MustStart()
-	defer node.Destroy()
+	node := fdbtest.MustStart(t)
+	defer node.Destroy(t)
 
 	// get the database
 	db := node.DB
