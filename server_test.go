@@ -22,7 +22,6 @@ func BenchmarkRoundtrip(b *testing.B) {
 func TestRoundtrip(t *testing.T) {
 	// start foundationdb node
 	node := fdbtest.MustStart(t)
-	defer node.Destroy(t)
 
 	// get the database
 	db := node.DB
