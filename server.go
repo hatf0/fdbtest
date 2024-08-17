@@ -30,6 +30,10 @@ func NewServer(version string) *fdbServer {
 	return s
 }
 
+func (s *fdbServer) ClusterFile() string {
+	return s.clusterFile
+}
+
 func (s *fdbServer) MustClear(t testing.TB) {
 	t.Helper()
 

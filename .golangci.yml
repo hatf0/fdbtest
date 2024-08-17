@@ -1,0 +1,70 @@
+# Based off of the golangci configuration from uber-go/zap: see https://github.com/uber-go/zap/blob/master/.golangci.yml
+
+output:
+  # Make output more digestible with quickfix in vim/emacs/etc.
+  sort-results: true
+  print-issued-lines: false
+
+linters:
+  # We'll track the golangci-lint default linters manually
+  # instead of letting them change without our control.
+  disable-all: true
+  enable:
+    # golangci-lint defaults:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+
+    # Our own extras:
+    - gofumpt
+    - nolintlint # lints nolint directives
+    - revive
+
+linters-settings:
+  govet:
+    # These govet checks are disabled by default, but they're useful.
+    enable:
+      - reflectvaluecompare
+      - sortslice
+      - unusedwrite
+
+issues:
+  # Print all issues reported by all linters.
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+  exclude-dirs:
+    - scripts
+    - network-operator
+  exclude-files:
+    # Ignore all unit tests
+    - "^.*_test\\.go$"
+  # Don't ignore some of the issues that golangci-lint considers okay.
+  # This includes documenting all exported entities.
+  exclude-use-default: false
+
+  exclude-rules:
+    # Don't warn on unused parameters.
+    # Parameter names are useful; replacing them with '_' is undesirable.
+    - linters: [revive]
+      text: 'unused-parameter: parameter \S+ seems to be unused, consider removing or renaming it as _'
+
+    # staticcheck already has smarter checks for empty blocks.
+    # revive's empty-block linter has false positives.
+    # For example, as of writing this, the following is not allowed.
+    #   for foo() { }
+    - linters: [revive]
+      text: "empty-block: this block is empty, you can remove it"
+
+    # Ignore logger.Sync() errcheck failures in example_test.go
+    # since those are intended to be uncomplicated examples.
+    - linters: [errcheck]
+      path: example_test.go
+      text: "Error return value of `logger.Sync` is not checked"
+    # Generally ignore if fmt.Fprintf can't write to stdout (or stderr) --
+    # we don't care all too much about that.
+    - linters: [errcheck]
+      text: "Error return value of `fmt.Fprintf` is not checked"

@@ -1,33 +1,17 @@
 name: Go
 on: [push]
 jobs:
-
-  build:
+  test:
     name: Build
     runs-on: ubuntu-latest
     steps:
-
-    - name: Set up Go 1.13
-      uses: actions/setup-go@v1
-      with:
-        go-version: 1.13
-      id: go
-
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v1
-
-    - name: Get dependencies
-      run: |
-        go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
-        fi
-        
-    - name: Install FoundationDB client
-      run: |
-        wget https://www.foundationdb.org/downloads/6.2.10/ubuntu/installers/foundationdb-clients_6.2.10-1_amd64.deb
-        sudo dpkg -i foundationdb-clients_6.2.10-1_amd64.deb
-
-    - name: Test
-      run: go test -cover -v .
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.22.2
+      - name: Install FoundationDB client
+        run: |
+          curl -fSSL -o foundationdb.deb https://www.foundationdb.org/downloads/7.3.43/ubuntu/installers/foundationdb-clients_7.3.43-1_amd64.deb
+          sudo dpkg -i foundationdb.deb
+      - name: Test
+        run: go test -race -cover -test.v .

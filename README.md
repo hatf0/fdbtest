@@ -22,11 +22,8 @@ func init(){
 }
 
 func TestRoundtrip(t *testing.T) {
-	// start foundationdb node
+	// start foundationdb node, will be cleaned up at the end of the test automatically
 	node := fdbtest.MustStart()
-	
-	// destroy node at the end of this test
-	defer node.Destroy()
 
 	// get the database
 	db := node.DB
