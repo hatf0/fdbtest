@@ -3,7 +3,7 @@ package fdbtest_test
 import (
 	"testing"
 
-	"devzero.io/fdbtest"
+	"github.com/hatf0/fdbtest"
 	"github.com/apple/foundationdb/bindings/go/src/fdb"
 	"github.com/stretchr/testify/assert"
 )

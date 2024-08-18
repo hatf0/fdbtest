@@ -1,4 +1,4 @@
-module devzero.io/fdbtest 
+module github.com/hatf0/fdbtest 
 
 go 1.22.2
 
